@@ -69,14 +69,13 @@
 ### 1.call的实现
 
 ```js
-Function.prototype.myCall = function (obj) {
-    let args = [];
-    for (let i = 1; i < arguments.length; i++) {
-        args.push(arguments[i])
-    }
-    obj.fn = this;
-    obj.fn(...args)
-    delete obj.fn
+Function.prototype.myCall = function(object) {
+	let obj = object || window;	// 如果没有传this参数，this将指向window
+	obj.fn = this;				// 获取函数本身，此时调用call方法的函数已经是传进来的对象的一个属性，也就是说函数的this已经指向传进来的对象
+	let arg = [...arguments].slice(1);	// 获取第二个及后面的所有参数(arg是一个数组)
+	let result = obj.fn(...arg);
+  delete obj.fn
+	return result
 }
 ```
 
@@ -85,12 +84,27 @@ Function.prototype.myCall = function (obj) {
 ### 2.apply的实现
 
 ```js
-
+Function.prototype.myApply = function(object) {
+	let obj = object || window;	// 如果没有传this参数，this将指向window
+	obj.fn = this;				// 获取函数本身，此时调用call方法的函数已经是传进来的对象的一个属性，也就是说函数的this已经指向传进来的对象
+	let arg = [...arguments].slice(1);	// 获取第二个及后面的所有参数(arg是一个数组)
+	let result = obj.fn(arg);    // 这里不要将数组打散，而是将整个数组传进去
+  delete obj.fn
+	return result
+}
 ```
 
 ### 3.bind的实现
 
 ```js
+Function.prototype.myBind = function(object) {
+	let obj = object || window;
+	obj.fn = this;
+	let arg = [...arguments].slice(1);
+	return function() {
+		obj.fn.apply(object, arg);
+	}
+}
 ```
 
 ##  npm 发布 package
