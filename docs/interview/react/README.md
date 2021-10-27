@@ -44,3 +44,20 @@ react16 1.setstae 以后会把update队列加入到mount 里面 如果他在生�
 - React.memo()、shouldComponentUpdate()等防止不必要的渲染
 - Fragments避免额外标记
 - 错误边界避免组件在出错时破坏整个应用
+
+## dva中的@connect
+
+connect是dva的一个函数，用来绑定model和view的
+
+```js
+import { connect } from 'dva';
+
+function mapStateToProps(state) {
+  return { todos: state.todos };
+}
+connect(mapStateToProps)(App);
+```
+
+其中connect函数有俩个参数，mapStateToProps可以理解为model层，而App为view层。总之接收一个函数，返回一个函数。
+
+第一个函数会注入全部的models，你需要返回一个新的对象，挑选该组件所需要的models。
