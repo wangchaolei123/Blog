@@ -140,3 +140,46 @@ display:inline-block;table-cell ;table-caption;flex
 css的加载不会阻止DOM树的解析
 css的加载会阻止DOM树的渲染，因为css的下载完成后解析成CSSDOM与DOM生成渲染树后，页面才会渲染，绘制出来
 
+## 盒模型
+- W3C的标准盒模型
+在标准的盒子模型中，width指content部分的宽度
+- IE的盒模型
+在IE盒子模型中，width表示content+padding+border这三个部分的宽度
+
+## 清除浮动方法
+
+- 使用带clear属性的空元素
+```css
+.clear {
+  clear: both;
+  }
+```
+
+- 使用CSS的overflow属性
+```css
+overflow: hidden;
+```
+- 给浮动的元素的容器添加浮动
+- 使用邻接元素处理
+- 使用CSS的:after伪元素
+
+## 文本溢出
+- 单行
+```css
+.hidden {
+  overflow: hidden;（文字长度超出限定宽度，则隐藏超出的内容）
+  white-space: nowrap;（设置文字在一行显示，不能换行）
+  text-overflow: ellipsis;（规定当文本溢出时，显示省略符号来代表被修剪的文本）
+}
+```
+
+- 多行
+```css
+.hidden {
+  -webkit-line-clamp: 2;（用来限制在一个块元素显示的文本的行数，2 表示最多显示 2 行。为了实现该效果，它需要组合其他的 WebKit 属性）
+  display: -webkit-box;（和 1 结合使用，将对象作为弹性伸缩盒子模型显示 ）
+  -webkit-box-orient: vertical;（和 1 结合使用 ，设置或检索伸缩盒对象的子元素的排列方式 ）
+  overflow: hidden;（文本溢出限定的宽度就隐藏内容）
+  text-overflow: ellipsis;（多行文本的情况下，用省略号 “…” 隐藏溢出范围的文本)
+}
+```

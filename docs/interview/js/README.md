@@ -288,13 +288,12 @@ function deepClone(source, memory) {
 4. 返回这个对象
 
    ```js
-   function _new() {
+    const _new = (constructor, ...args) => {
     let obj = {}
-    let Con = [].shift.call(arguments)
-    obj.__proto__ = Con.prototype
-    let result = Con.apply(obj, arguments)
-    return typeof obj === 'object' ? obj : {}
-   }
+    obj.__proto__ = constructor.prototype;
+    let res = constructor.apply(obj, args);
+    return res instanceof Object ? res : obj;
+    }
    ```
 
    
@@ -374,3 +373,113 @@ undefined表示“缺少值”，就是此处应该有一个值，但是还没�
 - 对象没有赋值的属性，该属性的值为undefined。
 
 - 函数没有返回值时，默认返回undefined。
+
+## 原型与原型链
+- prototype
+  在JavaScript中，每个函数都有一个prototype属性，这个属性指向函数的原型对象。
+原型的概念：每一个javascript对象(除null外)创建的时候，就会与之关联另一个对象，这个对象就是我们所说的原型，每一个对象都会从原型中“继承”属性。
+- __proto__
+这是每个对象(除null外)都会有的属性，叫做__proto__，这个属性会指向该对象的原型。
+- constructor
+每个原型都有一个constructor属性，指向该关联的构造函数。
+- 实例与原型
+当读取实例的属性时，如果找不到，就会查找与对象关联的原型中的属性，如果还查不到，就去找原型的原型，一直找到最顶层为止。
+- 原型链
+在JavaScript中万物都是对象，对象和对象之间也有关系，并不是孤立存在的。对象之间的继承关系，在JavaScript中是通过prototype对象指向父类对象，直到指向Object对象为止，这样就形成了一个原型指向的链条，专业术语称之为原型链。
+
+
+## 柯里化
+```js
+function add() {
+    const _args = [...arguments];
+    function fn() {
+        _args.push(...arguments);
+        return fn;
+    }
+    fn.toString = function () {
+        return _args.reduce((sum, cur) => sum + cur)
+    }
+    console.log(fn, _args);
+    return fn
+}
+```
+- instanceof
+```js
+const myInstanceof = (left, right) => {
+    const rightProto = right.prototype;
+    let leftProto = left.__proto__;
+    if (leftProto === null) {
+        return false
+    }
+    if (leftProto === rightProto) {
+        return true
+    }
+    return myInstanceof(leftProto, right);
+}
+```
+- 排序
+```js
+function sort(arr) {
+    let len = arr.length;
+    for (let i = 0; i < len; i++) {
+        for (let j = 0; j < len - j - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                let temp = arr[j + 1];
+                arr[j + 1] = arr[j];
+                arr[j] = temp;
+            }
+        }
+    }
+    return arr
+}
+```
+- 手动实现map和foreach
+```js
+Array.prototype.fakeMap = function (context) {
+    if (!Array.isArray(this) || typeof context != 'function') {
+        return
+    }
+    var res = [];
+    for (let i = 0; i < this.length; i++) {
+        res.push(context(this[i], i, this))
+    }
+    return res
+}
+Array.prototype.myEach = function (fn, context) {
+    var context = arguments[1];
+    console.log(arguments);
+    if (typeof fn !== "function") {
+        throw new TypeError(fn + "is not a function");
+    }
+
+    for (var i = 0; i < this.length; i++) {
+        fn.call(context, this[i], i, this);
+    }
+};
+```
+
+- Promise的all和race
+```js
+Promise.all = function (arr) {
+    return new Promise((resolve, reject) => {
+        const ans = [];
+        let index = 0;
+        for (let i = 0; i < arr.length; i++) {
+            arr[i].then(res => {
+                ans[i] = res;
+                index++;
+                if (index === arr.length) {
+                    resolve(ans)
+                }
+            }).catch(err => reject(err))
+        }
+    })
+}
+Promise.race = function (arr) {
+    return new Promise((resolve, reject) => {
+        arr.forEach(p => {
+            Promise.resolve(p).then(val => resolve(val), err => reject(err))
+        })
+    })
+}
+```

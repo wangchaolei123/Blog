@@ -61,3 +61,94 @@ connect(mapStateToProps)(App);
 其中connect函数有俩个参数，mapStateToProps可以理解为model层，而App为view层。总之接收一个函数，返回一个函数。
 
 第一个函数会注入全部的models，你需要返回一个新的对象，挑选该组件所需要的models。
+
+## useMemo和useCallback
+- useMemo主要用来解决使用 React hooks 产生的无用渲染的性能问题。
+- useCallback
+作用：在依赖项发生变化的时候，返回一个新的函数引用。
+需求：
+1）请求数据的接口需要放在useEffect外面，因为要将该方法传递给子组件
+2）在conditions发生变化时，自动执行该函数
+3）只有在conditions发生变化时，才会重新render子组件中的内容。
+## 自定义hooks
+- useDebounce
+```js
+import { useEffect, useRef } from 'react'
+const useDebounce = (fn, ms = 30, deps = []) => {
+    let timeout = useRef()
+    useEffect(() => {
+        if (timeout.current) clearTimeout(timeout.current)
+        timeout.current = setTimeout(() => {
+            fn()
+        }, ms)
+    }, deps)
+    const cancel = () => {
+        clearTimeout(timeout.current)
+        timeout = null
+    }
+  
+    return [cancel]
+  }
+ 
+export default useDebounce
+```
+- useThrottle
+```js
+import { useEffect, useRef, useState } from 'react'
+ 
+const useThrottle = (fn, ms = 30, deps = []) => {
+    let previous = useRef(0)
+    let [time, setTime] = useState(ms)
+    useEffect(() => {
+        let now = Date.now();
+        if (now - previous.current > time) {
+            fn();
+            previous.current = now;
+        }
+    }, deps)
+ 
+    const cancel = () => {
+        setTime(0)
+    }
+  
+    return [cancel]
+  }
+ 
+export default useThrottle
+```
+- useTitle
+```js
+import { useEffect } from 'react'
+ 
+const useTitle = (title) => {
+    useEffect(() => {
+      document.title = title
+    }, [])
+  
+    return
+  }
+ 
+export default useTitle
+```
+- useScroll
+```js
+import { useState, useEffect } from 'react'
+ 
+const useScroll = (scrollRef) => {
+  const [pos, setPos] = useState([0,0])
+ 
+  useEffect(() => {
+    function handleScroll(e){
+      setPos([scrollRef.current.scrollLeft, scrollRef.current.scrollTop])
+    }
+    scrollRef.current.addEventListener('scroll', handleScroll, false)
+    return () => {
+      scrollRef.current.removeEventListener('scroll', handleScroll, false)
+    }
+  }, [])
+  
+  return pos
+}
+ 
+export default useScroll
+```
