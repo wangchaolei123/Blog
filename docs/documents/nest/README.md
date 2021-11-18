@@ -82,4 +82,106 @@ nestjs对于swagger的集成非常友好，需要下载相关的swagger的node�
   @ApiParam({ description: '用户id', name: 'id' })
   ```
 
+  ## 连接数据库
   
+  ### MongoDB
+
+- 下载`typegoose`和`mongoose`相应的包
+
+- 在`main.ts`中，引入
+
+  ```ts
+  import * as mongoose from 'mongoose'
+  
+    mongoose.connect('mongodb://localhost:27017/链接名', {
+      dbName: '数据库名称',
+    })
+  ```
+
+- 创建一个新的文件
+
+  ```ts
+  import { getModelForClass, prop } from '@typegoose/typegoose';
+   //定义数据库模型
+  export class Post {
+      @prop()
+      title: string;
+      @prop()
+      content: string;
+  }
+  export const PostModel = getModelForClass(Post)
+  ```
+
+  
+
+- crud
+
+  ```ts
+  //引入封装好的PostModel
+  //get请求
+    @Get()
+    @ApiOperation({ summary: '查询全部' })
+    async findAll() {
+          return await PostModel.find()
+     }
+  	//创建
+      @Post()
+      @ApiOperation({ summary: '创建' })
+      async create(@Body() body: CreatPost) {
+          await PostModel.create(body)
+      }
+      @Get(':id')
+      @ApiOperation({ summary: '详情' })
+      async detail(@Param('id') id: string) {
+          return await PostModel.findById(id)
+      }
+      @Put(':id')
+      @ApiOperation({ summary: '修改' })
+      async update(@Param('id') id: string, @Body() body: CreatPost) {
+          await PostModel.findByIdAndUpdate(id, body)
+          return {
+              success: true
+          }
+      }
+      @Delete(':id')
+      @ApiOperation({ summary: '删除' })
+      async remove(@Param('id') id: string) {
+          await PostModel.findByIdAndDelete(id)
+          return {
+              success: true
+          }
+     }
+  ```
+
+  
+
+- 验证请求数据
+
+  下载`class-transformer`  和`class-validator`，在`main.ts`中
+
+  ```ts
+  import { ValidationPipe } from '@nestjs/common';
+   app.useGlobalPipes(new ValidationPipe()) //开启一个全局验证管道
+  ```
+
+  之前定义好的参数模型`CreatPost`
+
+  ```ts
+  import { IsNotEmpty } from 'class-validator';
+  class CreatPost {
+      @ApiProperty({ description: '帖子标题', example: '标题' })
+      @IsNotEmpty({ message: '请输入标题' })//没有这个参数时，返回错误
+      title: string;
+      @IsNotEmpty({})
+      @ApiProperty({ description: '帖子内容', example: '内容' })
+      content: string;
+  }
+  //错误信息
+  {
+    "statusCode": 400,
+    "message": [
+      "请输入标题"
+    ],
+    "error": "Bad Request"
+  }
+  ```
