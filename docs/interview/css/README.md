@@ -47,7 +47,7 @@ inline 元素的 margin 与 padding 左右生效，上下生效，**准确说在
 
 其中通配符选择器 `*`，组合选择器 `+ ~ >`，否定伪类选择器 `:not()` 对优先级无影响
 
-##  '+' 与 '~' 选择器
+## '+' 与 '~' 选择器
 
 - `+` 选择器匹配紧邻的兄弟元素
 - `~` 选择器匹配随后的所有兄弟元素
@@ -66,15 +66,15 @@ inline 元素的 margin 与 padding 左右生效，上下生效，**准确说在
 
 5.部分动画功能无法实现（如滚动动画，视差滚动等）
 
-###  JavaScript的动画：
+### JavaScript的动画：
 
- 正好弥补了css缺点，控制能力很强，可以单帧的控制、变换，同时写得好完全可以兼容IE6，并且功能强大。 总结： 对于一些复杂控制的动画，使用javascript会比较好。而在实现一些小的交互动效的时候，可以多考虑CSS
+正好弥补了css缺点，控制能力很强，可以单帧的控制、变换，同时写得好完全可以兼容IE6，并且功能强大。 总结： 对于一些复杂控制的动画，使用javascript会比较好。而在实现一些小的交互动效的时候，可以多考虑CSS
 
 ## position: sticky
 
 `position: sticky` 可理解为 `relative` 与 `fixed` 的结合体
 
-##  伪类与伪元素
+## 伪类与伪元素
 
 1. 伪类使用单冒号，而伪元素使用双冒号。如 `:hover` 是伪类，`::before` 是伪元素
 2. 伪元素会在文档流生成一个新的元素，并且可以使用 `content` 属性设置内容
@@ -93,21 +93,13 @@ content-visibility;
 ## HTML 标签有哪些行内元素
 
 - a
-
 - img
-
 - picture
-
 - span
-
 - input
-
 - textarea
-
 - select
-
 - label
-
   ## BFC
 
 1.符合一些特性的HTML标签，不脱离文档流，属于普通流。隔离的独立容器，容器内部的元素不会影响其他元素
@@ -115,8 +107,6 @@ content-visibility;
 触发条件 1.浮动元素。float除了none以外的值
 
 2.绝对定位元素 absolute fixed
-
-3.
 
 ```css
 display:inline-block;table-cell ;table-caption;flex
@@ -141,14 +131,16 @@ css的加载不会阻止DOM树的解析
 css的加载会阻止DOM树的渲染，因为css的下载完成后解析成CSSDOM与DOM生成渲染树后，页面才会渲染，绘制出来
 
 ## 盒模型
+
 - W3C的标准盒模型
-在标准的盒子模型中，width指content部分的宽度
+  在标准的盒子模型中，width指content部分的宽度
 - IE的盒模型
-在IE盒子模型中，width表示content+padding+border这三个部分的宽度
+  在IE盒子模型中，width表示content+padding+border这三个部分的宽度
 
 ## 清除浮动方法
 
 - 使用带clear属性的空元素
+
 ```css
 .clear {
   clear: both;
@@ -156,15 +148,19 @@ css的加载会阻止DOM树的渲染，因为css的下载完成后解析成CSSDO
 ```
 
 - 使用CSS的overflow属性
+
 ```css
 overflow: hidden;
 ```
+
 - 给浮动的元素的容器添加浮动
 - 使用邻接元素处理
 - 使用CSS的:after伪元素
 
 ## 文本溢出
+
 - 单行
+
 ```css
 .hidden {
   overflow: hidden;（文字长度超出限定宽度，则隐藏超出的内容）
@@ -174,6 +170,7 @@ overflow: hidden;
 ```
 
 - 多行
+
 ```css
 .hidden {
   -webkit-line-clamp: 2;（用来限制在一个块元素显示的文本的行数，2 表示最多显示 2 行。为了实现该效果，它需要组合其他的 WebKit 属性）
@@ -183,3 +180,13 @@ overflow: hidden;
   text-overflow: ellipsis;（多行文本的情况下，用省略号 “…” 隐藏溢出范围的文本)
 }
 ```
+
+## Flex
+
+Flex 1表示flex:1 1 auto
+
+* 第一个参数表示: **flex-grow定义项目的放大比例，默认为0，即如果存在剩余空间，也不放大**
+* 第二个参数表示: **flex-shrink 定义了项目的缩小比例，默认为1，即如果空间不足，该项目将缩小**
+* 第三个参数表示:**flex-basis给上面两个属性分配多余空间之前, 计算项目是否有多余空间, 默认值为 auto, 即项目本身的大小**
+
+---

@@ -18,7 +18,7 @@
             if(timer) { clearTimeout(timer) }
             timer = setTimeout(function(){
                 fn.apply(_this, args)
-            }, wait);      
+            }, wait);  
         }
     }
     // 使用
@@ -52,7 +52,7 @@
         return function () {
             let _this = this;
             let args = arguments;
-            
+        
             if(!timer) {
                 timer = setTimeout(function(){
                     timer = null;
@@ -78,8 +78,6 @@ Function.prototype.myCall = function(object) {
 	return result
 }
 ```
-
-
 
 ### 2.apply的实现
 
@@ -107,7 +105,7 @@ Function.prototype.myBind = function(object) {
 }
 ```
 
-##  npm 发布 package
+## npm 发布 package
 
 1. 注册 npm 账号 https://www.npmjs.com/
 2. 本地通过命令行 `npm login` 登陆
@@ -137,8 +135,6 @@ const arrayLike = {
 //这就是一个类数组
 ```
 
-
-
 `document.getElementsByTagName`，`document.querySelectorAll` 。除了 DOM API 中，常见的 `function` 中的 `arguments` 也是类数组
 
 ## compose函数
@@ -154,7 +150,7 @@ function compose() {
       ret = fn.apply(this, ret);
       return Array.isArray(ret) ? ret : [ret];
     }, args);
-    
+  
     return result;
   }
 }
@@ -277,14 +273,11 @@ function deepClone(source, memory) {
 2. `Mark-Sweep`，标记清除。新生代的某些对象由于过度活跃会被移至老生代，此时对老生代中活对象进行标记，并清理死对象
 3. `Mark-Compact`，标记整理。
 
-## new 
+## new
 
 1. 创建了一个新对象
-
 2. 链接到原型
-
-3. 绑定this指向 
-
+3. 绑定this指向
 4. 返回这个对象
 
    ```js
@@ -296,8 +289,6 @@ function deepClone(source, memory) {
     }
    ```
 
-   
-
 ## typeof 与 instanceof
 
 1. `typeof` 用以**判断基础数据类型** (null 除外)
@@ -307,7 +298,7 @@ function deepClone(source, memory) {
 
 ### 1.amd
 
- RequireJS 在推广过程中对模块定义的规范化产出
+RequireJS 在推广过程中对模块定义的规范化产出
 
 采用异步方式加载模块，制定了定义模块的规则，这样模块和模块的依赖可以被异步加载，不影响它后面语句的运行。所有依赖这个模块的语句，都定义在一个回调函数中，等到加载完成之后，这个回调函数才会运行。
 
@@ -357,38 +348,37 @@ inc() // 7
 不改变原数组：concat/join/reduce/map/forEach/filter/slice/findIndex
 
 改变原数组：push/unshift/pop/shift/sort/splice/reverse
+
 ## null 和undefined
+
 null表示 “没有对象”，即该处不应该有值。
 
 - 作为函数的参数，表示该函数的参数不是对象。
-
 - 作为对象原型链的终点。
 
 undefined表示“缺少值”，就是此处应该有一个值，但是还没有定义。
 
 - 变量被声明了，但没有赋值时，就等于undefined。
-
 - 调用函数时，应该提供的参数没有提供，该参数就等于undefined。
-
 - 对象没有赋值的属性，该属性的值为undefined。
-
 - 函数没有返回值时，默认返回undefined。
 
 ## 原型与原型链
+
 - prototype
   在JavaScript中，每个函数都有一个prototype属性，这个属性指向函数的原型对象。
-原型的概念：每一个javascript对象(除null外)创建的时候，就会与之关联另一个对象，这个对象就是我们所说的原型，每一个对象都会从原型中“继承”属性。
+  原型的概念：每一个javascript对象(除null外)创建的时候，就会与之关联另一个对象，这个对象就是我们所说的原型，每一个对象都会从原型中“继承”属性。
 - __proto__
-这是每个对象(除null外)都会有的属性，叫做__proto__，这个属性会指向该对象的原型。
+  这是每个对象(除null外)都会有的属性，叫做__proto__，这个属性会指向该对象的原型。
 - constructor
-每个原型都有一个constructor属性，指向该关联的构造函数。
+  每个原型都有一个constructor属性，指向该关联的构造函数。
 - 实例与原型
-当读取实例的属性时，如果找不到，就会查找与对象关联的原型中的属性，如果还查不到，就去找原型的原型，一直找到最顶层为止。
+  当读取实例的属性时，如果找不到，就会查找与对象关联的原型中的属性，如果还查不到，就去找原型的原型，一直找到最顶层为止。
 - 原型链
-在JavaScript中万物都是对象，对象和对象之间也有关系，并不是孤立存在的。对象之间的继承关系，在JavaScript中是通过prototype对象指向父类对象，直到指向Object对象为止，这样就形成了一个原型指向的链条，专业术语称之为原型链。
-
+  在JavaScript中万物都是对象，对象和对象之间也有关系，并不是孤立存在的。对象之间的继承关系，在JavaScript中是通过prototype对象指向父类对象，直到指向Object对象为止，这样就形成了一个原型指向的链条，专业术语称之为原型链。
 
 ## 柯里化
+
 ```js
 function add() {
     const _args = [...arguments];
@@ -403,7 +393,9 @@ function add() {
     return fn
 }
 ```
+
 - instanceof
+
 ```js
 const myInstanceof = (left, right) => {
     const rightProto = right.prototype;
@@ -417,7 +409,9 @@ const myInstanceof = (left, right) => {
     return myInstanceof(leftProto, right);
 }
 ```
+
 - 排序
+
 ```js
 function sort(arr) {
     let len = arr.length;
@@ -433,7 +427,9 @@ function sort(arr) {
     return arr
 }
 ```
+
 - 手动实现map和foreach
+
 ```js
 Array.prototype.fakeMap = function (context) {
     if (!Array.isArray(this) || typeof context != 'function') {
@@ -459,6 +455,7 @@ Array.prototype.myEach = function (fn, context) {
 ```
 
 - Promise的all和race
+
 ```js
 Promise.all = function (arr) {
     return new Promise((resolve, reject) => {
@@ -483,33 +480,50 @@ Promise.race = function (arr) {
     })
 }
 ```
+
 ## 变量提升
+
 js代码执行分为俩个阶段：
 1.词法分析：词法分析主要包括：分析变量声明、分析函数声明、分析形参三个部分。
 2.执行阶段。
+
 - 变量提升
+
 ```js
     console.log(a);  //undefined
     var a = 123; 
 ```
+
 因为变量a的声明被提到了作用域顶端。上面代码编译后应该是下面这个样子
+
 ```js
     var a;
     console.log(a)
     a = 123
     //所以输出内容为 undeifend
 ```
+
 - 函数提升
-具名函数的声明有两种方式：1. 函数声明式 2. 函数字面量式。
+  具名函数的声明有两种方式：1. 函数声明式 2. 函数字面量式。
+
 ```js
 //函数声明式
 function bar () {}
 //变量形式声明； 
 var foo = function () {}
 ```
+
 所有的声明都会提升到作用域的最顶上去。
 
 同一个变量只会声明一次，其他的会被忽略掉或者覆盖掉。
 
 函数声明的优先级高于变量声明的优先级，并且函数声明和函数定义的部分一起被提升。
 
+## async 与 defer
+
+ `defer` 与 `async` 的区别如下:
+
+* 相同点: **异步加载 (fetch)**
+* 不同点:
+  * async 加载(fetch)完成后立即执行 (execution)，因此可能会阻塞 DOM 解析；
+  * defer 加载(fetch)完成后延迟到 DOM 解析完成后才会执行(execution)，但会在事件 `DomContentLoaded` 之前
