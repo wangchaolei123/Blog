@@ -22,21 +22,22 @@
 不可以，componentWillMount还未挂载，代码仍然在服务器中执行，此时没有浏览器环境，访问localstorage报错
 
 ## useCallback 使用场景
+
 作为props传递的函数，集合memo一起使用；
 作为更新触发的依赖项。主要目的是为了避免高昂的计算和不必要的重复渲染
 
-## setState 
+## setState
 
 react16 1.setstae 以后会把update队列加入到mount 里面 如果他在生命周期里面 其实他是进行批量去更新的 如果他是在生命周期里面去set 其实数据同步的。如果想要拿到最新的就需要脱离react生命周期，和react事件流 比如在setTimeout里面set值 他拿到的数据就是最新的。
 
 ## React的router原理
 
-前端路由实现的是**监听url变化**，实现有俩种方式：hash和history模式。无需刷新页面就能加载相应的页面。Hash的url格式为`www.a.com/#/`，当#后的哈希值发生改变 ，通过`hashchange`事件监听，然后页面跳转.History url 通过`history.pushState`和`history.replaceState`改变url。
+前端路由实现的是**监听url变化**，实现有俩种方式：hash和history模式。无需刷新页面就能加载相应的页面。Hash的url格式为 `www.a.com/#/`，当#后的哈希值发生改变 ，通过 `hashchange`事件监听，然后页面跳转.History url 通过 `history.pushState`和 `history.replaceState`改变url。
 
 - hash只能改变#后的值，而history模式可以随意设置同源url；
 - hash只能添加字符串类的数据，而history可以通过API添加多种类型的数据；
-- hash的历史记录只显示之前的`www.a.com`而不会显示hash值，而history的每条记录都会进入到历史记录；
-- hash无需后端配置且兼容性好，而history需要配置`index.html`用于匹配不到资源的情况。
+- hash的历史记录只显示之前的 `www.a.com`而不会显示hash值，而history的每条记录都会进入到历史记录；
+- hash无需后端配置且兼容性好，而history需要配置 `index.html`用于匹配不到资源的情况。
 
 ## 性能优化
 
@@ -63,15 +64,19 @@ connect(mapStateToProps)(App);
 第一个函数会注入全部的models，你需要返回一个新的对象，挑选该组件所需要的models。
 
 ## useMemo和useCallback
+
 - useMemo主要用来解决使用 React hooks 产生的无用渲染的性能问题。
 - useCallback
-作用：在依赖项发生变化的时候，返回一个新的函数引用。
-需求：
-1）请求数据的接口需要放在useEffect外面，因为要将该方法传递给子组件
-2）在conditions发生变化时，自动执行该函数
-3）只有在conditions发生变化时，才会重新render子组件中的内容。
+  作用：在依赖项发生变化的时候，返回一个新的函数引用。
+  需求：
+  1）请求数据的接口需要放在useEffect外面，因为要将该方法传递给子组件
+  2）在conditions发生变化时，自动执行该函数
+  3）只有在conditions发生变化时，才会重新render子组件中的内容。
+
 ## 自定义hooks
+
 - useDebounce
+
 ```js
 import { useEffect, useRef } from 'react'
 const useDebounce = (fn, ms = 30, deps = []) => {
@@ -92,7 +97,9 @@ const useDebounce = (fn, ms = 30, deps = []) => {
  
 export default useDebounce
 ```
+
 - useThrottle
+
 ```js
 import { useEffect, useRef, useState } from 'react'
  
@@ -116,7 +123,9 @@ const useThrottle = (fn, ms = 30, deps = []) => {
  
 export default useThrottle
 ```
+
 - useTitle
+
 ```js
 import { useEffect } from 'react'
  
@@ -130,7 +139,9 @@ const useTitle = (title) => {
  
 export default useTitle
 ```
+
 - useScroll
+
 ```js
 import { useState, useEffect } from 'react'
  
@@ -152,3 +163,22 @@ const useScroll = (scrollRef) => {
  
 export default useScroll
 ```
+
+## React新的生命周期
+
+- getDerivedStateFromProps
+  代替 `componentWillReceiveProps`。`componentWillReceiveProps()`方法判断前后两个 props 是否相同，如果不同再将新的 props 更新到相应的 state 上去。这样做一来会破坏 state 数据的单一数据源，导致组件状态变得不可预测，另一方面也会增加组件的重绘次数。
+  `getDerivedStateFromProps`禁止访问 `this.props,` 确保`根据当前的 props 来更新组件的 state
+- getSnapshotBeforeUpdate
+  代替componentWillUpdate。在 React 开启异步渲染模式后，在 render 阶段读取到的 DOM 元素状态并不总是和 commit 阶段相同，这就导致在componentDidUpdate 中使用 componentWillUpdate 中读取到的 DOM 元素状态是不安全的，因为这时的值很有可能已经失效了。getSnapshotBeforeUpdate 会在最终的 render 之前被调用，也就是说在 getSnapshotBeforeUpdate 中读取到的 DOM 元素状态是可以保证与 componentDidUpdate 中一致的。
+- 官网文档指出使用这些生命周期的代码会在未来版本的react中更容易产生 `bug`，尤其是对于异步渲染的版本
+- 由于未来采用异步渲染机制，所以在17版本中去掉的生命周期钩子函数：
+
+```
+componentWillMount
+```
+
+
+　　 componentWillRecieveProps
+
+　　componentWIllUpdate
